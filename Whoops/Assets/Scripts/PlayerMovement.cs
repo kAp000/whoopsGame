@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float fallDamageThreshold;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpForce;
-    [SerializeField] private bool isJumping;
+    [SerializeField] public bool isJumping;
     private float moveHorivontal;
     private float maxYVel;
 
@@ -35,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
         {
+            FindObjectOfType<AudioManager>().Play("Jump");
             maxYVel = 0;
             childObject.SetActive(false);
             rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
@@ -90,6 +91,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.CompareTag("Ground") || collision.CompareTag("BellowWater"))
         {
+            if (collision.CompareTag("Ground"))
+            {
+                FindObjectOfType<AudioManager>().Play("Ground");
+            }
+            else if (collision.CompareTag("BellowWater"))
+            {
+                FindObjectOfType<AudioManager>().Play("Water");
+            }
             slimed = false;
             childObject.SetActive(true);
             transform.localScale = new Vector3(2, 2, 1);
@@ -104,6 +113,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (collision.CompareTag("Slime"))
         {
+            FindObjectOfType<AudioManager>().Play("Slime");
             Debug.Log("Slime)");
             isJumping = false;
             slimed = true;
